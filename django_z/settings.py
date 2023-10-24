@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_totp',
     # 自定义模块
-    'account',
+    'account', # 自定义用户模块
+    'demo_test' # 测试模块，可以拆卸
 ]
 
 MIDDLEWARE = [
@@ -108,7 +109,7 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": 'django_redis.client.SentinelClient',
             "CONNECTION_POOL_KWARGS": {"max_connections": 20},
-            "PASSWORD": "umetrip_!1234",
+            "PASSWORD": "1234",
             "SENTINELS": [
                 ("127.0.0.1", "6383"),
                 ("127.0.0.1", "6383"),

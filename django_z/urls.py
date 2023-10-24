@@ -26,6 +26,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('docs/', include_docs_urls(title='My API title')),  # coreapi接口文档
+    path('api/demo/', include('demo_test.urls', namespace='demo')), # 测试模块，可以拆卸
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
