@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 第三方模块插件
     'import_export',
+    'rest_framework',
+    'django_q', # 队列任务
     # 安全认证opt
     'django_otp',
     'django_otp.plugins.otp_totp'
@@ -95,6 +97,32 @@ DATABASES = {
     }
 }
 
+DJANGO_REDIS_CONNECTION_FACTORY = 'django_redis.pool.SentinelConnectionFactory'
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://sentinel-127.0.0.1-6382/5",
+        "KEY_PREFIX": '',
+        "OPTIONS": {
+            "CLIENT_CLASS": 'django_redis.client.SentinelClient',
+            "CONNECTION_POOL_KWARGS": {"max_connections": 20},
+            "PASSWORD": "umetrip_!1234",
+            "SENTINELS": [
+                ("127.0.0.1", "6383"),
+                ("127.0.0.1", "6383"),
+                ("127.0.0.1", "6383"),
+            ]
+        },
+    }
+}
+CACHE_SECONDS = 60 * 15
+
+Q_CLUSTER = {
+    'name': 'DJRedis',
+    'workers': 4,
+    'timeout': 90,
+    'django_redis': 'default'
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -144,7 +172,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # 日志格式与日志路径配置
 LOG_PATH = os.path.join(BASE_DIR, 'log')
 
@@ -187,4 +214,10 @@ LOGGING = {
             'propagate': True,
         },
     }
+}
+
+
+# REST相关配置
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema' # Api文档配置
 }
