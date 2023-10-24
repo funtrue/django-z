@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'django_q', # 队列任务
     # 安全认证opt
     'django_otp',
-    'django_otp.plugins.otp_totp'
+    'django_otp.plugins.otp_totp',
+    # 自定义模块
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -171,6 +173,10 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 媒体文件地址
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # 日志格式与日志路径配置
 LOG_PATH = os.path.join(BASE_DIR, 'log')
