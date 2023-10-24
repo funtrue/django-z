@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'utils.middleware.IP_delete_can',
 ]
 
 ROOT_URLCONF = 'django_z.urls'
@@ -141,3 +143,48 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# 日志格式与日志路径配置
+LOG_PATH = os.path.join(BASE_DIR, 'log')
+
+if not os.path.isdir(LOG_PATH):
+    os.makedirs(LOG_PATH)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(levelname)s %(asctime)s %(filename)s %(module)s %(funcName)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+    },
+    'filters': {
+    },
+    'handlers': {
+        'middleware_handler': {
+            'level': 'DEBUG',
+            'class': 'utils.log_handler.CommonTimedRotatingFileHandler',
+            'filename': '%s/middleware.log' % LOG_PATH,
+            'formatter': 'simple',
+            'backupCount': 3,
+            'when': 'midnight',
+            'interval': 1
+        },
+        'middleware_console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+    },
+    'loggers': {
+        'middleware_log': {
+            'handlers': ['middleware_handler', 'middleware_console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}
