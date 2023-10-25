@@ -163,7 +163,7 @@ USE_TZ = True
 SIMPLEUI_HOME_INFO = False 
 SIMPLEUI_ANALYSIS = False 
 # opt加密配置，自定义字符配置就行
-OTP_TOTP_ISSUER = "otp解码"
+# OTP_TOTP_ISSUER = "otp解码"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
