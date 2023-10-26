@@ -15,7 +15,8 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+# 获取环境，测试或者生产
+BASE_ENV = os.getenv("ENV", "NULL")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -24,8 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d9lw+-p4wiurwx9pe2mfc!%y4mq1xbq_$9mz6%n)k15)pgz_y0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ["*"]
 
 
@@ -43,6 +42,7 @@ INSTALLED_APPS = [
     # 第三方模块插件
     'import_export',
     'rest_framework',
+    'django_filters',
     'django_q', # 队列任务
     # 安全认证opt
     'django_otp',
@@ -89,43 +89,77 @@ WSGI_APPLICATION = 'django_z.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'project_test',
-        'USER': 'root',
-        'PASSWORD': 'z12138',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+# 如果是测试环境
+if BASE_ENV == "TEST":   
+    DEBUG = False
+    # 测试环境数据库支持
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'project_test',
+            'USER': 'root',
+            'PASSWORD': 'z12138',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+        }
     }
-}
-
-DJANGO_REDIS_CONNECTION_FACTORY = 'django_redis.pool.SentinelConnectionFactory'
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://sentinel-127.0.0.1-6382/5",
-        "KEY_PREFIX": '',
-        "OPTIONS": {
-            "CLIENT_CLASS": 'django_redis.client.SentinelClient',
-            "CONNECTION_POOL_KWARGS": {"max_connections": 20},
-            "PASSWORD": "1234",
-            "SENTINELS": [
-                ("127.0.0.1", "6383"),
-                ("127.0.0.1", "6383"),
-                ("127.0.0.1", "6383"),
-            ]
-        },
+    
+    # redis哨兵支持
+    DJANGO_REDIS_CONNECTION_FACTORY = 'django_redis.pool.SentinelConnectionFactory'
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": f"redis://sentinel-127.0.0.1-6382/5",
+            "KEY_PREFIX": '',
+            "OPTIONS": {
+                "CLIENT_CLASS": 'django_redis.client.SentinelClient',
+                "CONNECTION_POOL_KWARGS": {"max_connections": 20},
+                "PASSWORD": "1234",
+                "SENTINELS": [
+                    ("127.0.0.1", "6383"),
+                    ("127.0.0.1", "6383"),
+                    ("127.0.0.1", "6383"),
+                ]
+            },
+        }
     }
-}
-CACHE_SECONDS = 60 * 15
+    CACHE_SECONDS = 60 * 15
 
-Q_CLUSTER = {
-    'name': 'DJRedis',
-    'workers': 4,
-    'timeout': 90,
-    'django_redis': 'default'
-}
+    Q_CLUSTER = {
+        'name': 'DJRedis',
+        'workers': 4,
+        'timeout': 90,
+        'django_redis': 'default'
+    }
+else:
+    DEBUG = True
+    # 开发环境数据库支持
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": f"redis://127.0.0.1:6389/5",
+            "KEY_PREFIX": '',
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "CONNECTION_POOL_KWARGS": {"max_connections": 20},
+                "PASSWORD": 1234,
+            },
+        }
+    }
+
+    Q_CLUSTER = {
+        'name': 'DJRedis',
+        'workers': 4,
+        'timeout': 90,
+        'django_redis': 'default'
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -169,6 +203,7 @@ SIMPLEUI_ANALYSIS = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

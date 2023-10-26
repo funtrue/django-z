@@ -17,8 +17,6 @@ from django.contrib import admin
 from django.urls import path,include 
 from rest_framework.documentation import include_docs_urls # coreapi接口文档
 from django_otp.admin import OTPAdminSite # 双因子认证
-from django.conf import settings
-from django.conf.urls.static import static
 
 # admin.site.__class__ = OTPAdminSite # 是否开启双因子认证
 
@@ -28,4 +26,4 @@ urlpatterns = [
     path('api/demo/', include('demo_test.urls', namespace='demo')), # 测试模块，可以拆卸
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
