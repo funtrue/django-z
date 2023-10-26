@@ -47,9 +47,7 @@ gunicorn django_z.wsgi -c gunicorn_config.py
 server {
         listen       80;
         server_name  localhost;
-        # 日志格式文件
-        include date-format.conf;
-        access_log  /opt/app/nginx/logs/access.log main ;
+        
         location / {
             client_max_body_size 50m;
             proxy_pass http://127.0.0.1:7777;
