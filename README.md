@@ -21,12 +21,14 @@ pip3 install -r requirements.txt
 
 # 单点启动服务
 python3 manage.py runserver 0.0.0.0:7777
+python3 manage.py qcluster  # 异步任务启动
 
 
 # gunicorn托管启动服务+nginx（nginx需要自行配置）
 python3 manage.py collectstatic
 
 gunicorn django_z.wsgi -c gunicorn_config.py
+python3 manage.py qcluster  # 异步任务启动
 ```
 
 # 4. 项目依赖与功能
