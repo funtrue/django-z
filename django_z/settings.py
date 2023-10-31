@@ -44,11 +44,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'django_q', # 队列任务
-    # 安全认证opt
+    # 用户安全认证opt
     'django_otp',
     'django_otp.plugins.otp_totp',
     # 自定义模块
-    'account', # 自定义用户模块
+    'account',  # 自定义用户模块
     'demo_test' # 测试模块，可以拆卸
 ]
 
@@ -58,11 +58,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 用户认证，注意放在用户认证中间件下面
-    'django_otp.middleware.OTPMiddleware',
+    'django_otp.middleware.OTPMiddleware',                          # 用户安全认证opt，注意放在用户认证中间件下面
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.middleware.IP_delete_can',
+    'utils.middleware.IP_delete_can',                               # 自定义中间件模块，可以拆卸
 ]
 
 ROOT_URLCONF = 'django_z.urls'
