@@ -23,9 +23,9 @@ python3 manage.py qcluster  # 异步任务启动
 
 ## 3. gunicorn托管启动服务+nginx（nginx需要自行配置）
 ```shell
-python3 manage.py collectstatic
+python3 manage.py collectstatic #收集静态文件
 
-gunicorn django_z.wsgi -c django_z/gunicorn_config.py
+gunicorn django_z.wsgi -c django_z/gunicorn_config.py # 托管启动
 python3 manage.py qcluster  # 异步任务启动
 ```
 
