@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'django_z.wsgi.application'
 
 # 如果是测试环境
 if BASE_ENV == "TEST":   
-    DEBUG = True
+    DEBUG = False
     # 测试环境数据库支持
     DATABASES = {
         'default': {
@@ -265,5 +265,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 10, # 分页限制
 }

@@ -19,9 +19,9 @@ class DemoGet(GenericAPIView):
         serializer = self.get_serializer(qs, many=True)
         
         # django-q异步任务事例
-        async_task(
-            demo_task, 10,
-            task_name='test',
-            hook=task_finish,
-        )
+        # async_task(
+        #     demo_task, 10,
+        #     task_name='test',
+        #     hook=task_finish,
+        # )
         return Response(serializer.data)

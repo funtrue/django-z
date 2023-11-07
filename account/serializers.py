@@ -16,6 +16,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     class Meta:
         model = Profile
-        fields = ('url', 'username', 'email', 'groups', 'date_joined')
+        fields = ('url', 'user', 'phone', 'bio')
