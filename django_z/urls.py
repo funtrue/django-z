@@ -15,14 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include 
-from rest_framework.documentation import include_docs_urls # coreapi接口文档
-from django_otp.admin import OTPAdminSite # 双因子认证
+from rest_framework.documentation import include_docs_urls  # coreapi接口文档，可以关闭
+from django_otp.admin import OTPAdminSite                   # 双因子认证，可以关闭
+# REST路由配置
+from rest_framework import routers
+from account import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
 
 # admin.site.__class__ = OTPAdminSite # 是否开启双因子认证
 
 urlpatterns = [
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('docs/', include_docs_urls(title='My API title')),  # coreapi接口文档，可以关闭
+    path('api-auth/', include('rest_framework.urls')),
+    path('docs/', include_docs_urls(title='My API title')),         # coreapi接口文档，可以关闭
     path('api/demo/', include('demo_test.urls', namespace='demo')), # 测试模块，可以拆卸
 ]
 

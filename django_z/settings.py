@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'django_z.wsgi.application'
 
 # 如果是测试环境
 if BASE_ENV == "TEST":   
-    DEBUG = False
+    DEBUG = True
     # 测试环境数据库支持
     DATABASES = {
         'default': {
@@ -260,5 +260,10 @@ LOGGING = {
 
 # REST相关配置
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema' # Api文档配置
+    'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema', # Api文档配置
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
